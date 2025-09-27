@@ -5,5 +5,6 @@
 RELEASE (final and ready to use), 
 PROTOTYPE (can require some changes), 
 WIP (work in progress)
+RESOURCE (saved to be used later)
 
-#last updated 24.09.2025
+#last updated 27.09.2025
