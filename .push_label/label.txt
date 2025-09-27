@@ -1,0 +1,9 @@
+"name" CURRENT_STATE (ver. 1.0)
+
+*CURRENT_STATE must be one of the following: 
+
+RELEASE (final and ready to use), 
+PROTOTYPE (can require some changes), 
+WIP (work in progress)
+
+#last updated 24.09.2025
