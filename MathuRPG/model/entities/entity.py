@@ -35,10 +35,6 @@ class Entity:
     # funkcja do późniejszego sprawdzania kolizji np. z jakimś elementem mapy
     def collision_with(self, dx, dy):
         return False
-    
-    # zadawanie obrażeń celowi
-    def deal_damage_to_(self, target, damage):
-        target.take_damage(damage)
 
 
 

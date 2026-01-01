@@ -1,6 +1,6 @@
 from entity import Entity
 
-# funkcja licząca wartość n-elementu ciągu
+# funkcja licząca wartość n-elementu ciągu Fibonacciego
 def fibonacci(n):
     if n <= 0:
         return 0
