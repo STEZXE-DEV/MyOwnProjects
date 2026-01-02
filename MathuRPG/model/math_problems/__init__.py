@@ -1,4 +1,4 @@
-from math_task import  MathTask
-from MathuRPG.model.math_problems.tasks_generators import *
+from .math_task import MathTask
+from .tasks_generators import *
 
-__all__ = ["MathTask", "*", " ", " "]
+__all__ = ["MathTask", "tasks_generators"]

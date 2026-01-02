@@ -1,1 +1,4 @@
 /tests
+/.vscode
+__pycache__
+/MathuRPG/model/math_problems/__pycache__

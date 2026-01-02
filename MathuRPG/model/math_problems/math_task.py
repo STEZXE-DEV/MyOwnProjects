@@ -1,6 +1,6 @@
 import time as t
 import random as r
-from tasks_generators import TASK_TYPES
+from .tasks_generators import TASK_TYPES
 
 #klasa zadania matematycznego
 class MathTask:
