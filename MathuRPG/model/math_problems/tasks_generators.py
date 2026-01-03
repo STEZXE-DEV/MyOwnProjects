@@ -1,13 +1,12 @@
 import random as r
 
 TASK_TYPES = ["arithmetic", "basic equation", "geometry", "square function", "trigonometry"] # lista możliwych typów zadań
-OPERATORS = ["+", "-", "*", ":"] #lista operatorów
+OPERATORS = ["+", "-", "*", ":"] # lista operatorów
 
 # zakres poziomów [1, 3] - trzy poziomy trudności
 def level_clamp(lvl):
-    lvl = max(1 , min(3, lvl))
-    return lvl
-
+    return max(1 , min(3, lvl))
+    
 # funkcja do ustalenia operatora przed liczbą w zależności od jej znaku (ujemna czy dodatnia)
 def operator_before_value(val):
 
@@ -32,41 +31,89 @@ def divided_by_val_with_sign(val):
 
 # losowo przyznaje znak liczbie 
 def draw_value_sign_randomly(val):
-    return -val if r.randint(0, 1) == 0 else val # nowy, lepszy skrócony zapis + jest bardziej czytelny
+    # jeśli 0 to zwraca 0 bez zmieniania znaku
+    if val == 0:
+        return 0
+    else: 
+        return -val if r.randint(0, 1) == 0 else val # nowy, lepszy skrócony zapis + jest bardziej czytelny
 
 '''<----> ZADANIE ARYTMETYCZNE <---->'''
 
+# funkcja do generowania losowych wartości a i b do działań arytmetycznych 
+def generate_arithmetic_values(level, min_a=None, max_a=None, min_b=None, max_b=None):
+
+    # lista argumentów funckji
+    list_of_arguments = [level, min_a, max_a, min_b, max_b]
+
+    # walidowanie argumentów
+    for i in range(len(list_of_arguments)):
+        arg = list_of_arguments[i]
+        # jeżeli jakiś argument nie jest None albo Int to zwraca ValueError (warto zaznaczyć, że isinstance(val, int) przepuszcza val == bool, dlatego dodatkowy "or")
+        # dawniej (not isinstance(list_of_arguments[i], int) or isinstance(list_of_arguments[i], bool)) and list_of_arguments[i] is not None - okazało się to małoczytelne
+        if arg is not None and (not isinstance(arg, int) or isinstance(arg, bool)):  
+            raise ValueError(f"Argument na pozycji {i} powinien być INT albo None")
+
+
+    min_a = min_a if min_a is not None else 4 ** (level - 1)
+    max_a = max_a if max_a is not None else 10 * 5 ** (level - 1)
+
+    # odporność na pomyłkę w zakresie liczby a
+    if min_a > max_a:
+        min_a, max_a = max_a, min_a
+
+    a = r.randint(min_a, max_a)
+    
+    # jeśli nie podano jakiejś wartości dla b to b korzysta z wartości zakresu a
+    min_b = min_b if min_b is not None else min_a
+    max_b = max_b if max_b is not None else max_a
+
+    # może zdarzyć się przypadek że min_a przekaże do min_b wartość większą niż max_b co spowoduje błąd przy losowaniu liczby
+    if min_b > max_b:
+        min_b, max_b = max_b, min_b
+
+    b = r.randint(min_b, max_b)
+
+    return a, b
+
 # funkcja generująca zadanie arytmetyczne z losowym operatorem działania
 def generate_arithmetic_task(level):
-
+    
     level = level_clamp(level)
+
     mul_max = (100, 500, 1000) # maksymalne wyniki mnożenia
     div_max = (10, 25, 35) # maksymalna dzielna
-    a = None
-    b = None
+    a, b = generate_arithmetic_values(level)
 
     while a == b: # dopóki obie liczby nie będą od siebie różne to losują się na nowo
-        a = r.randint(1 * 5**(level-1) , 10 * 5**(level-1))
-        b = r.randint(1 * 5**(level-1) , 10 * 5**(level-1))
+        a, b = generate_arithmetic_values(level)
 
-    idx = r.randint(0, len(OPERATORS)-1)
-    random_operator = OPERATORS[idx]
+    # losowanie operatora do działania (pomiędzy liczbami a i b)
+    indexes = [x for x in range(len(OPERATORS))]
+    
+    # szanse wylosowania się konkretnego rodzaju działania arytmetycznego zależne są od poziomu
+    match level:
+        case 1:
+            chances = [60, 20, 10, 10] # typ 1: 60%, typ 2: 20%, typ 3: 10% typ 4: 10%
+        case 2:
+            chances = [30, 30, 20, 20]
+        case 3:
+            chances = [5, 5, 45, 45]
 
-    #jeśli odejmowanie lub dzielenie i druga liczba jest większa od pierwszej to następuje zamiana
-    if idx in [1, 3] and b > a:
+    random_idx = r.choices(indexes, weights=chances, k=1)[0]
+    random_operator = OPERATORS[random_idx]
+
+    # jeśli jest odejmowanie lub dzielenie i druga liczba jest większa od pierwszej to następuje zamiana liczb miejscami 
+    if random_idx in [1, 3] and b > a:
         a, b = b, a
 
-    elif idx == 2:
+    elif random_idx == 2:
         while a * b > mul_max[level-1]:
-            a = r.randint(1 * 5**(level-1) , 10 * 5**(level-1))
-            b = r.randint(1 * 5**(level-1) , 10 * 5**(level-1))
+            a, b = generate_arithmetic_values(level)
 
-    while idx == 3 and (b == 0 or a % b != 0):
-        a = r.randint(1 * 5**(level-1) , div_max[level-1])
-        b = r.randint(1 * 5**(level-1) , div_max[level-1])
-        if b > a:
-            a, b = b, a
-        a *= b
+    # podczas gdy zostaje wybrane mnożenie, liczba przez którą jest dzielone nie może wynosić 0, modulo sprawdza czy dzielenie jest całkowite
+    while random_idx == 3 and (b == 0 or a % b != 0):
+        k, b = generate_arithmetic_values(level, 2, div_max[level-1], None, div_max[level-1]) # dawniej a = r.randint(1 * 4**(level-1) , div_max[level-1])
+        a = b * k
 
     question = f"Jaki jest wynik działania {a} {random_operator} {b} ?"
 
@@ -121,7 +168,7 @@ def simple_equation_gen_ranges(level):
         case 3:
             return third_range
         case _:
-            return first_range if not str(level).isnumeric() else first_range if level < 1 else third_range
+            return first_range 
 
 # generowanie zadania typu pierwszego
 def gen_type_one(level): # ax + b = y
@@ -151,13 +198,10 @@ def gen_type_two(level): # ax + b = cx + y
     if level > 1:
             a, b, c, x = draw_value_sign_randomly(a), draw_value_sign_randomly(b), draw_value_sign_randomly(c), draw_value_sign_randomly(x)
 
-    for _ in range(25):
-        if a != c:
-            break
-        c = r.randint(*ranges["d"]) if r.randint(0,1) else r.randint(*ranges["x"])
-    else:
-        c += 1
+    while a == c:
+        c = r.randint(*ranges["d"]) if r.randint(0,1) == 0 else r.randint(*ranges["x"])
 
+    # ten wzór gwarantuje, że równanie ma rozwiązanie i że jest ono całkowite
     y = (a - c) * x + b
  
     a_val = val_next_to_x(a)
@@ -176,13 +220,13 @@ def gen_type_three(level): # (ax+b​) / d = y
     # zebranie zakresów względem obecnego poziomu
     ranges = simple_equation_gen_ranges(level)
     
-    #przypisanie zakresów do zmiennych równania
+    # przypisanie zakresów do zmiennych równania
     a, x, d, y = r.randint(*ranges["a"]), r.randint(*ranges["x"]), r.randint(*ranges["d"]), r.randint(*ranges["y"])
 
     if level > 1:
             a, x, d, y = draw_value_sign_randomly(a), draw_value_sign_randomly(x), draw_value_sign_randomly(d), draw_value_sign_randomly(y)
 
-    #zapewnienie, że wynik równania będzie liczbą całkowitą 
+    # zapewnienie, że wynik równania będzie liczbą całkowitą 
     b = y * d - (a * x)
 
     y_val = str(y)
@@ -194,14 +238,12 @@ def gen_type_three(level): # (ax+b​) / d = y
 
     return question, x
 
-    
-
 # główna funkcja do generowania prostego zadania z algebry
 def generate_basic_equation_task(level):
 
     level = level_clamp(level) 
 
-    # tu mam zamiar napisać instrukcję, która sprawi, że pod wpływem poziomu zmieniają się szanse na poszczególny typ zadania algebraicznego prostego
+    # instrukcja, która sprawia, że pod wpływem poziomu zmieniają się szanse na poszczególny typ zadania algebraicznego prostego
     match level:
         case 1:
             chances = [70, 20, 10] # typ 1: 70%, typ 2: 20%, typ 3: 10%
@@ -210,61 +252,65 @@ def generate_basic_equation_task(level):
         case 3:
             chances = [10, 20, 70]
 
-    generators = [gen_type_one, gen_type_two, gen_type_three]
-    result = r.choices(generators, weights = chances, k = 1)[0] #gen_type_three(level) #gen_type_one(level), gen_type_two(level)
+    # random choices działa trochę inaczej od choice - zwraca krotki zamiast samych wartości, dlatego w tym przypadku potrzebne jest [0]
+    gen_result = r.choices([gen_type_one, gen_type_two, gen_type_three], weights = chances, k = 1)[0] # gen_type_one(level), gen_type_two(level), gen_type_three(level) 
 
-    # random choices działa trochę inaczej od choice - zwraca krotkę zamiast dwóch wartości
-    question, answer = result(level)
+    question, answer = gen_result(level)
     
     return question, answer
 
 # funkcja do testowania generowania zadań
 def gen_test():
 
-    def functions_test_handling(function, type, quantity):
+    # funckja do wypisania testów w konsoli, każdy jeden test to 
+    def functions_test_handling(function, task_type, quantity):
         for x in range(quantity):
             print(f"\nTEST NR. {x+1}")
             for i in range(1, 4):
                     qstn, ans = function(i)
-                    print(f"Zadanie typu {type.upper()} ({i} poziomu): {qstn}\t\tPoprawna odpowiedź: {ans}")
+                    print(f"Zadanie typu {task_type.upper()} ({i} poziomu): {qstn}\t\tPoprawna odpowiedź: {ans}")
         print()
 
-    def tests_quantity():
-        number_of_tests = input("Zadeklaruj ilość testów (max 20): \n> ")
+    # funkcja zwracająca ilość testów wedle podanej wartości przez użytkownika
+    def tests_quantity(): # jeżeli input jest inny niż przedział [1, max_number_of_tests] to wykona się tylko jeden test
+        max_number_of_tests = 50
+        number_of_tests = input(f"Zadeklaruj ilość testów (max {max_number_of_tests}): \n> ")
         if not number_of_tests.isnumeric():
             number_of_tests = 1
         elif number_of_tests.isnumeric():
             number_of_tests = int(number_of_tests)
-            if number_of_tests < 1 or number_of_tests > 20:
+            if number_of_tests < 1 or number_of_tests > max_number_of_tests:
                 number_of_tests = 1
         return number_of_tests
             
-
     print("TESTY FUNKCJI")
-    list_of_choices = enumerate(TASK_TYPES) #ponumerowana lista wyborów
+
+    list_of_choices = enumerate(TASK_TYPES, 1) # ponumerowana lista wyborów (zaczyna numerować od 1)
+
     for number, task in list_of_choices:
-        print(f"{number+1} - {task}")
+        print(f"{number} - {task}")
     print("x - EXIT")
+
     choice = input("Podaj numer funkcji do przetestowania: \n> ")
     if choice.isnumeric():
         choice = int(choice)
-        if choice in range(1, len(TASK_TYPES)+1):
+        if choice in range(1, len(TASK_TYPES) + 1):
             chosen_type = TASK_TYPES[choice - 1]
-        else:
-            print("Funkcja niedostępna lub nie istnieje!")
+        # else:
+        #     print("Funkcja niedostępna lub nie istnieje!")
 
     # w zależności od wyboru pokazuje odpowiadające testy
     match choice:
 
+        # TESTY FUNKCJI generate_arithmetic_task()
         case 1:
-              # TESTY FUNKCJI generate_arithmetic_task()
             print()
             print("TEST FUNKCJI generate_arithmetic_task() -> Działania arytmetyczne")
             print()
             functions_test_handling(generate_arithmetic_task, chosen_type, tests_quantity())
             
+        # TESTY FUNKCJI generate_basic_equation_task()
         case 2:
-            # TESTY FUNKCJI generate_basic_equation_task()
             print()
             print("TEST FUNKCJI generate_basic_equation_task() -> Działania algebraiczne proste")
             print()
@@ -276,8 +322,9 @@ def gen_test():
             print("ZAKOŃCZONO TESTY")
             print()
             exit()
-            
-        case _: #stan domyślny
+
+        #stan domyślny 
+        case _: 
             print()
             print("Funkcja niedostępna lub nie istnieje!")
             print()
