@@ -1,42 +1,41 @@
 from entity import Entity
-# from player import Player
 import random as r
 
+# klasa obiektu przeciwnika
 class Enemy(Entity):
-    def __init__(self, x, y, level=1, power=1):
-        super().__init__(x, y, max_hp=1)
-        self.hp = self.max_hp
-        self.max_hp = self.max_hp
-        self.power = int(power)
-        self.lvl = int(level)
+    def __init__(self, x: int, y: int, level: int = None, max_hp: int = None, power: int = None) -> None:
+
+        """
+        Docstring for __init__
+        
+        :param x: pozycja przeciwnika w osi x
+        :param y: pozycja przeciwnika w osi y 
+        :param level: poziom doświadczenia przeciwnika
+        :param max_hp: ilość maksymalnych punktów zdrowia przeciwnika
+        :param hp: aktualna ilość punktów zdrowia przeciwnika
+        :param power: moc przeciwnika, która wpływa na zadawane obrażenia
+        :param entity_type: rodzaj bytu, w tym przypadku Enemy
+
+        """
+
+        if level is None:
+            level = r.randint(1, 10)
+        if power is None:
+            power = r.randint(level ** 2, level * 100)
+        if max_hp is None:
+            max_hp = level ** 2 * 10
+
+        super().__init__(x, y, max_hp)
+        self.power = power
+        self.level = level
         self.entity_type = "Enemy"
 
-    def enemy_base_damage(self):
-        return self.lvl ** 2 * self.power
+    # zwraca bazowe obrażenia zadawane przez przeciwnika
+    def enemy_base_damage(self) -> int:
+        return self.level ** 2 * self.power
     
-    def randomized_enemy_stats(self):
-        self.lvl = r.randint(1, 10)
-        self.power = r.randint(self.lvl ** 2, self.lvl * 100)
-    
-    def calculate_max_hp(self):
-        self.max_hp = self.lvl ** 2 * 10
+    # oblicza maksymalne zdrowie przeciwnika i wypełnia zdrowie do wartości maksymalnej
+    def calculate_max_hp(self) -> None:
+        self.max_hp = self.level ** 2 * 10
         self.hp = self.max_hp
-
-
-# player = Player(0, 0)
-# player.unassigned_stat_points = 10
-# player.assign_stat_points("CONCLUSION", 5)
-# enemy = Enemy(0, 0)
-# enemy.power = 25
-# enemy.lvl = 2
-
-# print("HP before:", player.hp)
-# enemy.deal_damage_to_(player, enemy.calculate_damage_to_player(player))
-# print("HP after:", player.hp)
-
-
-
-
-
-
 

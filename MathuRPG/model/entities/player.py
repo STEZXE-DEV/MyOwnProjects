@@ -12,7 +12,16 @@ def fibonacci(n):
 
 # klasa postaci/gracza
 class Player(Entity):
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int) -> None:
+
+        """
+        Docstring for __init__
+        
+        :param x: pozycja gracza w osi x
+        :param y: pozycja gracza w osi y
+
+        """
+
         super().__init__(x, y, max_hp=100)
         self.exp = 0
         self.entity_type = "Player"
@@ -23,13 +32,13 @@ class Player(Entity):
         self.conclusion = 0 # wniosek - zmniejsza otrzymywane obrażenia od wrogów
         self.unassigned_stat_points = 0 # każdy poziom daje wolne punkty do rozdania
     
-    def max_exp_per_lvl(self):
+    def max_exp_per_lvl(self) -> int:
         return fibonacci(self.lvl + 1) * 20 # wzór na maksymalną ilość EXP dla poszczególnego poziomu
     
-    def amount_of_unassigned_stat_points(self):
-        return int(self.lvl * 2) # wzór na punkty do przydzielenia
+    def amount_of_unassigned_stat_points(self) -> int:
+        return self.lvl * 2 # wzór na punkty do przydzielenia
 
-    def level_up(self, amount):
+    def level_up(self, amount: int) -> None:
         self.exp += amount
         while self.exp >= self.max_exp_per_lvl(): #kiedy osiągany jest limit lub limit jest przekroczony
             self.exp -= self.max_exp_per_lvl()
@@ -38,7 +47,7 @@ class Player(Entity):
             self.hp += self.lvl * 10 # zwiększenie HP (pozwala na uzyskanie HP nie będąc w pełni uleczonym)
             self.max_hp += self.lvl * 10 # zwiększenie MAX_HP o tą samą wartość co HP
 
-    def assign_stat_points(self, stat, amount=1): #domyślnie ilość 1
+    def assign_stat_points(self, stat: str, amount=1) -> None: 
         if 0 < amount <= self.unassigned_stat_points: #ilość punktów jakie chcemy przydzielić musi być mniejsza/równa ilości nieprzypisanych punktów które mamy
             if stat == "POWER":
                 self.power += amount
@@ -47,7 +56,8 @@ class Player(Entity):
             elif stat == "CONCLUSION":
                 self.conclusion += amount
             self.unassigned_stat_points -= amount
-        else: raise ValueError("You don't have enough points to assign")
+        else: 
+            raise ValueError("You don't have enough points to assign")
 
 
 player = Player(0,0)

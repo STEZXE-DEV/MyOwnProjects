@@ -1,77 +1,87 @@
 # klasa wszystkich bytów
 class Entity:
-    def __init__(self, x, y, max_hp):
-        self.x = float(x)
-        self.y = float(y)
+    def __init__(self, x: int, y: int, max_hp: int) -> None:
+
+        """
+        Docstring for __init__
+        
+        :param x: pozycja bytu w osi x
+        :param y: pozycja bytu w osi y
+        :param max_hp: maksymalne zdrowie bytu
+        :param hp: aktualne zdrowie bytu
+        :param lvl: poziom doświadczenia bytu
+        :param entity_type: rodzaj bytu np. Player
+        :param power: moc bytu, która zwiększa zadawane przez byt obrażenia
+
+        """
+
+        self.x = x
+        self.y = y
         self.max_hp = max_hp
         self.hp = max_hp
         self.lvl = 1
         self.entity_type = "Entity"
         self.power = 0
 
+
     # funkcja sprawdzająca czy byt żyje
-    def is_alive(self):
+    def is_alive(self) -> bool:
         return self.hp > 0
     
     # funkcja poruszania się bytu
-    def move(self, dx, dy):
+    def move(self, dx: int, dy: int) -> None:
+        
+        """
+        Docstring for move
+        
+        :param dx: wartość przesunięcia bytu w osi x
+        :param dy: wartość przesunięcia bytu w osi y
+
+        """
+
         self.x += dx
         self.y += dy
 
     # otrzymywanie obrażeń
-    def take_damage(self, dmg):
+    def take_damage(self, dmg: int) -> None:
+
+        """
+        Docstring for take_damage
+        
+        :param dmg: ilość podstawowych obrażeń które zostaną zadane bytowi
+
+        """
+
         if dmg >= self.hp:
             self.hp = 0
         else:
             self.hp = self.hp - dmg
          
-    # leczenie się
-    def heal(self, amount):
+    # leczenie się (uzupełnienie zdrowia nigdy nie przekroczy maksymalnego zdrowia bytu)
+    def heal(self, amount: int) -> None:
+
+        """
+        Docstring for heal
+        
+        :param amount: ilość punktów zdrowia, które zostanie odzyskane
+
+        """
+
         if amount + self.hp <= self.max_hp:
             self.hp = self.hp + amount
         else:
             self.hp = self.max_hp
 
     # funkcja do późniejszego sprawdzania kolizji np. z jakimś elementem mapy
-    def collision_with(self, dx, dy):
+    def collision_with(self, dx: int, dy: int) -> bool:
+
+        """
+        Docstring for collision_with
+        
+
+        :param dx: pozycja elementu w osi x, z którym sprawdzamy kolizję
+        :param dy: pozycja elementu w osi y, z którym sprawdzamy kolizję
+
+        """
+
         return False
-
-
-
-# # --- Testowy obiekt ---
-# entity = Entity(10, 20, 100)
-
-# print("=== START ===")
-# print(f"Pozycja startowa: ({entity.x}, {entity.y})")
-# print(f"HP startowe: {entity.hp}/{entity.max_hp}")
-# print(f"Czy żyje? {entity.is_alive()}")
-# print(f"Poziom: {entity.lvl}")
-
-# # --- Test ruchu ---
-# entity.move(5, -3)
-# print("\n=== TEST RUCHU ===")
-# print(f"Nowa pozycja: ({entity.x}, {entity.y})")  # powinno być (15, 17)
-
-# # --- Test obrażeń ---
-# entity.take_damage(30)
-# print("\n=== TEST OTRZYMYWANIA OBRAŻEŃ ===")
-# print(f"HP po 30 dmg: {entity.hp}")  # powinno być 70
-# print(f"Czy żyje? {entity.is_alive()}")  # True
-
-# entity.take_damage(100)
-# print(f"HP po 100 dmg: {entity.hp}")  # powinno być 0
-# print(f"Czy żyje? {entity.is_alive()}")  # False
-
-# # --- Test leczenia ---
-# entity.heal(50)
-# print("\n=== TEST LECZENIA ===")
-# print(f"HP po leczeniu 50: {entity.hp}")  # powinno być 50
-
-# entity.heal(100)
-# print(f"HP po leczeniu 100: {entity.hp}")  # powinno być max_hp = 100
-
-# --- Test ponownego otrzymania obrażeń ---
-# entity.take_damage(1000)
-# print("\n=== TEST ŚMIERCI ===")
-# print(f"HP po dmg: {entity.hp}")  # 0
-# print(f"Czy żyje? {entity.is_alive()}")  # False
