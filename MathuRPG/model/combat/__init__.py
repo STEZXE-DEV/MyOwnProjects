@@ -1,4 +1,4 @@
 from .stats import Stats
-from .battle import Battle
+from .battle_mode import BattleMode
 
-__all__ = ["Stats", "Battle"]
+__all__ = ["Stats", "BattleMode"]

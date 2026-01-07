@@ -27,7 +27,7 @@ class Entity:
 
     # funkcja sprawdzająca czy byt żyje
     def is_entity_alive(self) -> bool:
-        return self.hp > 0
+        return self.get_hp() > 0
     
     # funkcja poruszania się bytu
     def move(self, dx: int, dy: int) -> None:
@@ -52,6 +52,7 @@ class Entity:
         :param dmg: ilość podstawowych obrażeń które zostaną zadane bytowi
 
         """
+
         if dmg <= 0:
             dmg = 1
 

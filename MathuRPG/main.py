@@ -1,5 +1,5 @@
 import pygame as pg
-from model.math_problems.tasks_generators import *
+from model.math_problems.task_generator import *
 import pygame
 
 class InputBox:
@@ -38,7 +38,7 @@ class InputBox:
         # Rysuj ramkę
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
-question, correct_ans = generate_basic_equation_task(2)
+question, correct_ans = generate_task(2, 2)
 
 pg.init()
 

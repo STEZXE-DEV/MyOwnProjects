@@ -1,4 +1,4 @@
-from entity import Entity
+from .entity import Entity
 
 # funkcja licząca wartość n-elementu ciągu Fibonacciego
 def fibonacci(n):

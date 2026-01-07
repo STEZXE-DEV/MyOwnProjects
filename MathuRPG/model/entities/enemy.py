@@ -1,4 +1,4 @@
-from entity import Entity
+from .entity import Entity
 import random as r
 
 # klasa obiektu przeciwnika

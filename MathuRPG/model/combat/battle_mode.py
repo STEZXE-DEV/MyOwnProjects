@@ -30,7 +30,7 @@ class BattleMode:
         # if attacker.entity_type == "Player": - może się przydać potem
 
         # conclusion jest elementem tylko w klasie Player
-        amount = max(0, amount - getattr(defender, 'conclusion', 0)) # iloś obrażeń nie może być mniejsza od 0
+        amount = max(0, amount - getattr(defender, 'conclusion', 0)) # ilość obrażeń nie może być mniejsza od 0
 
         # jeden punkt mocy (power) to 2HP obrażeń
         if amount:
