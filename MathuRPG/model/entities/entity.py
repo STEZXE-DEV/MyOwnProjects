@@ -22,10 +22,11 @@ class Entity:
         self.lvl = 1
         self.entity_type = "Entity"
         self.power = 0
+        self.alive = True
 
 
     # funkcja sprawdzająca czy byt żyje
-    def is_alive(self) -> bool:
+    def is_entity_alive(self) -> bool:
         return self.hp > 0
     
     # funkcja poruszania się bytu
@@ -51,9 +52,12 @@ class Entity:
         :param dmg: ilość podstawowych obrażeń które zostaną zadane bytowi
 
         """
+        if dmg <= 0:
+            dmg = 1
 
-        if dmg >= self.hp:
+        if dmg >= self.get_hp():
             self.hp = 0
+            self.alive = False
         else:
             self.hp = self.hp - dmg
          
@@ -72,16 +76,6 @@ class Entity:
         else:
             self.hp = self.max_hp
 
-    # funkcja do późniejszego sprawdzania kolizji np. z jakimś elementem mapy
-    def collision_with(self, dx: int, dy: int) -> bool:
-
-        """
-        Docstring for collision_with
-        
-
-        :param dx: pozycja elementu w osi x, z którym sprawdzamy kolizję
-        :param dy: pozycja elementu w osi y, z którym sprawdzamy kolizję
-
-        """
-
-        return False
+    # getter życia bytu
+    def get_hp(self) -> int:
+        return self.hp

@@ -21,9 +21,9 @@ class Enemy(Entity):
         if level is None:
             level = r.randint(1, 10)
         if power is None:
-            power = r.randint(level ** 2, level * 100)
+            power = r.randint(level ** 2, level * 10 + 1)
         if max_hp is None:
-            max_hp = level ** 2 * 10
+            max_hp = level ** 2 * 100
 
         super().__init__(x, y, max_hp)
         self.power = power

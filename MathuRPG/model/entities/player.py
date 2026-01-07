@@ -48,7 +48,7 @@ class Player(Entity):
             self.max_hp += self.lvl * 10 # zwiększenie MAX_HP o tą samą wartość co HP
 
     def assign_stat_points(self, stat: str, amount=1) -> None: 
-        if 0 < amount <= self.unassigned_stat_points: #ilość punktów jakie chcemy przydzielić musi być mniejsza/równa ilości nieprzypisanych punktów które mamy
+        if 0 < amount <= self.unassigned_stat_points: # ilość punktów jakie chcemy przydzielić musi być mniejsza/równa ilości nieprzypisanych punktów które mamy
             if stat == "POWER":
                 self.power += amount
             elif stat == "FOCUS":
@@ -58,6 +58,3 @@ class Player(Entity):
             self.unassigned_stat_points -= amount
         else: 
             raise ValueError("You don't have enough points to assign")
-
-
-player = Player(0,0)

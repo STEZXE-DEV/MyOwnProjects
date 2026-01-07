@@ -4,7 +4,7 @@ from .tasks_generators import TASK_TYPES
 
 #klasa zadania matematycznego
 class MathTask:
-    def __init__(self, question, time_limit, correct_ans, difficulty=r.randint(1,10) ):
+    def __init__(self, question, correct_ans, time_limit, difficulty=r.randint(1,10) ):
         self.time_start = int(t.time()) #czas rozpoczęcia
         self.time_limit = time_limit #limit czasu w sekundach
         self.question = str(question) #dyspozycja/zadanie/pytanie
