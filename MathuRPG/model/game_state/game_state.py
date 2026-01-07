@@ -1,4 +1,4 @@
-from ..combat.battle_mode import BattleMode
+from combat.battle_mode import BattleMode
 
 # klasa stanu gry (stan gry przechodzi w tryby eksploracja -> walka -> eksploracja)
 class GameState:
