@@ -44,9 +44,9 @@ class BattleMode:
                 self.deal_damage(self.player, self.enemy)
             else:
                 self.deal_damage(self.enemy, self.player)
-        self.set_winner()
+        self.check_winner()
 
-    def set_winner(self) -> str | None:
+    def check_winner(self) -> str | None:
         self.winner = "Enemy" if self.player.hp <= 0 else "Player" if self.enemy.hp <= 0 else None
         
     def get_winner(self) -> str:

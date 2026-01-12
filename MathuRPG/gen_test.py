@@ -1,9 +1,9 @@
-from .task_generator import *
-from .utils import *
+from model.math_problems.task_generator import *
+from model.math_problems.utils import *
 
 
 # funkcja do testowania generowania zadań
-def gen_test():
+def generation_test():
 
     # funckja do wypisania testów w konsoli
     def functions_test_handling(function, task_type, quantity):
@@ -75,5 +75,5 @@ def gen_test():
 # zapobiegnięcie wywoływania testów kiedy moduł jest importowany
 if __name__ == "__main__":
     while True:
-        gen_test()
+        generation_test()
         input("Wciśnij ENTER by kontynuować... \n")

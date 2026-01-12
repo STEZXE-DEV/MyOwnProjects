@@ -1,3 +1,4 @@
+from .tile import Tile
 
 # klasa mapy w grze
 class Map:
@@ -15,7 +16,7 @@ class Map:
         self.width = width
         self.height = height
         self.default_tile = default_tile
-        self.grid = [ [default_tile for _ in range(width)] for _ in range(height) ] # dwuwymiarowa plansza złożona z kafelków
+        self.grid = self.grid = [[Tile(default_tile.tile_type, default_tile.walkable) for _ in range(width)] for _ in range(height)] # dwuwymiarowa plansza złożona z kafelków
 
     # sprawdza czy obie współrzędne mieszczą się w granicach mapy
     def in_map_bounds(self, x: int, y: int) -> bool:
@@ -61,7 +62,7 @@ class Map:
             self.grid[y][x] = tile
 
     # funkcja dla bytu do sprawdzenia możliwości przejścia na następny kafelek 
-    def try_move(self, entity, dx: int, dy: int) -> bool:
+    def try_move(self, entity, dx: int, dy: int) -> None:
         
         """
 
@@ -77,14 +78,17 @@ class Map:
         new_y = entity.y + dy
 
         # kafelek musi być w granicach mapy
-        if self.in_map_bounds(new_x, new_y):
-            new_tile = self.get_tile(new_x, new_y)
-        else:
-            return False
-        
+        if not self.in_map_bounds(new_x, new_y):
+            return None
+            
+        new_tile = self.get_tile(new_x, new_y)
+
         # kafelek musi być przechodni
-        if not new_tile.is_walkable() or new_tile.get_entity() is not None:
-            return False
+        if not new_tile.is_walkable():
+            return None
+        
+        if new_tile.get_entity():
+            return new_tile.get_entity()
         
         old_tile = self.get_tile(entity.x, entity.y)
         if old_tile:
@@ -93,9 +97,6 @@ class Map:
         entity.move(dx, dy) # byt przechodzi na nowy kafelek
         new_tile.set_entity(entity) # byt jest na nowym kafelku
         new_tile.action_on_enter(entity) # działanie po wejściu bytu na kafelek
-
-
-        return True # bytowi udało się wykonać ruch
             
     # funkcja do sprawdzania kolizji z inny bytem na kafelku
     def collision_with_entity(self, entering_entity) -> str:
@@ -128,8 +129,4 @@ class Map:
         player_steps_on_enemy = entering_entity.entity_type == "Player" and self.collision_with_entity(entering_entity) == "Enemy"
         enemy_steps_on_player = entering_entity.entity_type == "Enemy" and self.collision_with_entity(entering_entity) == "Player"
 
-        if player_steps_on_enemy or enemy_steps_on_player:
-            return True
-        else:
-            return False
-
+        return player_steps_on_enemy or enemy_steps_on_player

@@ -80,3 +80,7 @@ class Entity:
     # getter życia bytu
     def get_hp(self) -> int:
         return self.hp
+    
+    # zwraca współrzędne w osiach x i y bytu
+    def get_position(self) -> int:
+        return self.x, self.y

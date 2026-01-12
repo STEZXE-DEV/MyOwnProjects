@@ -1,6 +1,6 @@
 # klasa kafelka
 class Tile:
-    def __init__(self, tile_type: str, walkable: bool, entity_on=None, on_enter=None, on_exit=None) -> None:
+    def __init__(self, tile_type: str, walkable: True = bool, entity_on=None, on_enter=None, on_exit=None) -> None:
 
         """
         Docstring for __init__
@@ -22,10 +22,13 @@ class Tile:
     # funkcja zwracająca typ kafelka
     def get_type(self) -> str:
         return f"{self.tile_type}"
+    
+    def set_tile_type(self, new_tile_type):
+        self.tile_type = new_tile_type
 
     # czy można na niego wejść
     def is_walkable(self) -> bool:
-        return self.walkable and self.entity_on is None
+        return self.walkable
     
     # działanie na wejściu
     def action_on_enter(self, entity):
