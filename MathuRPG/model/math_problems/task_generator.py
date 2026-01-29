@@ -8,10 +8,12 @@ TASK_GEN_FUNCTIONS = [gen_arithmetic, gen_equation] # jeszcze nie ma gen_geometr
 
 # funkcja generująca zadanie wedle poziomu przeciwnika i poziomu trudności gry
 def generate_task(enemy_level, game_difficulty): # task_type będzie z enemy.level (max 5 lub 10 zależy ile mi się uda), task_difficulty będzie brany z poziomu trudności gry (1, 2, 3)
+    task_gen = None
+    task_level = None
     for k, v in enumerate(TASK_GEN_FUNCTIONS, 1):
         if k == enemy_level:
             task_gen = v
     for k, v in enumerate(DIFFICULTY_LEVELS, 1):
-        if k == game_difficulty:
-            task_level = game_difficulty
+        if v == game_difficulty:
+            task_level = k
     return task_gen(task_level)

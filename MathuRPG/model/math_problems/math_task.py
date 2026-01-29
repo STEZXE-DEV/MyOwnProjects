@@ -4,7 +4,7 @@ from .utils import *
 
 #klasa zadania matematycznego
 class MathTask:
-    def __init__(self, question, correct_ans, time_limit, difficulty=r.randint(1,10) ):
+    def __init__(self, question, correct_ans, time_limit, difficulty=r.randint(1,2) ):
         self.time_start = int(t.time()) #czas rozpoczęcia
         self.time_limit = time_limit #limit czasu w sekundach
         self.question = str(question) #dyspozycja/zadanie/pytanie
@@ -25,7 +25,7 @@ class MathTask:
     def is_ans_correct(self):
         return self.answer == self.correct_ans
     
-    #funkcja sprawdzająca czay zadanie zostało poprawnie ukończone w czasie
-    def is_task_done_correctly_in_time(self):
-        return self.time_left() > 0 and self.is_ans_correct()
+    #funkcja sprawdzająca czay zadanie zostało poprawnie ukończone w czasie 
+    def is_task_done_correctly_in_time(self): # self.time_left() > 0 and self.is_ans_correct()
+        return  self.is_ans_correct()
     

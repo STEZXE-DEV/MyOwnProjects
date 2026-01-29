@@ -37,18 +37,17 @@ class BattleMode:
             defender.take_damage(amount)
 
     # działanie po odpowiedzi użytkownika w zależności od jej poprawności z zadaniem i czasem
-    def action_after_player_answer(self, player_answer: str | int, task) -> None:
-        if player_answer is not None:
-            task.submit_answer(player_answer)
-            if task.is_task_done_correctly_in_time():
-                self.deal_damage(self.player, self.enemy)
-            else:
-                self.deal_damage(self.enemy, self.player)
-        self.check_winner()
+    def action_after_player_answer(self, player_answer: str | int, task) -> None | bool:
 
-    def check_winner(self) -> str | None:
+        if player_answer is not None and player_answer.lstrip('-').isnumeric():
+            player_answer = int(player_answer)
+        task.submit_answer(player_answer)
+        if task.is_task_done_correctly_in_time():
+            self.deal_damage(self.player, self.enemy)
+        else:
+            self.deal_damage(self.enemy, self.player)
+        return self.get_winner()
+
+    def get_winner(self) -> str | None:
         self.winner = "Enemy" if self.player.hp <= 0 else "Player" if self.enemy.hp <= 0 else None
-        
-    def get_winner(self) -> str:
-            return self.winner
-    
+        return self.winner

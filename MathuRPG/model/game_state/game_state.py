@@ -4,6 +4,7 @@ from ..combat.battle_mode import BattleMode
 class GameState:
     BATTLE = "battle" # tryb stanu gry - walka - zadania matematyczne
     EXPLORATION = "exploration" # tryb stanu gry - eksploracja - free roam
+    END = "game_over"
 
     def __init__(self) -> None: 
         self.mode = GameState.EXPLORATION # domyślny stan gry to eksploracja
@@ -33,3 +34,6 @@ class GameState:
     # czy właśnie trwa bitwa
     def is_in_battle(self) -> bool:
         return self.mode == GameState.BATTLE
+    
+    def game_end(self) -> None:
+        self.mode = GameState.END

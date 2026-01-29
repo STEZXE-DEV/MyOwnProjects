@@ -27,7 +27,7 @@ class Player(Entity):
         self.entity_type = "Player"
 
         # statystyki domyślne gracza
-        self.power = 0 # potęga - zwiększa zadawane obrażenia przeciwnikowi
+        self.power = 10 # potęga - zwiększa zadawane obrażenia przeciwnikowi
         self.focus = 0 # skupienie - wydłuża czas na wykoanie zadania
         self.conclusion = 0 # wniosek - zmniejsza otrzymywane obrażenia od wrogów
         self.unassigned_stat_points = 0 # każdy poziom daje wolne punkty do rozdania

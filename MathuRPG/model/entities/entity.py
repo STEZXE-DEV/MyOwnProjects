@@ -26,7 +26,7 @@ class Entity:
 
 
     # funkcja sprawdzająca czy byt żyje
-    def is_entity_alive(self) -> bool:
+    def is_alive(self) -> bool:
         return self.get_hp() > 0
     
     # funkcja poruszania się bytu
@@ -43,6 +43,13 @@ class Entity:
         self.x += dx
         self.y += dy
 
+    # funkcja poruszania się bytu w kierunku celu
+    def follow_target(self, target, n = 1) -> int:
+        # jeśli x celu jest większe od x bytu to się zwiększa
+        dx = 1 if target.x  > self.x else -1 if target.x  < self.x else 0
+        dy = 1 if target.y  > self.y else -1 if target.y  < self.y else 0
+        return dx, dy
+
     # otrzymywanie obrażeń
     def take_damage(self, dmg: int) -> None:
 
@@ -58,9 +65,11 @@ class Entity:
 
         if dmg >= self.get_hp():
             self.hp = 0
-            self.alive = False
         else:
             self.hp = self.hp - dmg
+
+    def die(self):
+        self.alive = False
          
     # leczenie się (uzupełnienie zdrowia nigdy nie przekroczy maksymalnego zdrowia bytu)
     def heal(self, amount: int) -> None:
